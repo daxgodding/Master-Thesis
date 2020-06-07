@@ -84,7 +84,7 @@ print(g=algdep(exp(matsolve(A,Y)[1]),120));
 
 default(parisize, 64M);\\Beginning stack size
 default(parisizemax, 800000M);\\Highest stack size used
-default(realprecision, 1);\\Highest precision used
+default(realprecision, 1500);\\Highest precision used
 N=1948;\\Level of the newform
 Chi=Mod(973, 1948);\\Dirichlet character
 L=lfunmf(M1=mfinit([N, 1, Chi], 0), mfeigenbasis(M1)[1]);
