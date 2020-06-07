@@ -10,34 +10,32 @@ code(N, dim, Chi1, Chi2, pol, deg)=
     if(X[1]!=Mod(0, N), L[1]=lfunmf(M1=mfinit([N, 1, X[1]], 0), mfeigenbasis(M1)[1]));
     if(X[2]!=Mod(0, N), L[2]=lfunmf(M2=mfinit([N, 1, X[2]], 0), mfeigenbasis(M2)[1]));
     \\Creates the space(s) of modular forms of type (1,Chi1) and (1,Chi2) of level N
-    if(dim==d, Y=Mat([lfun(L[i], 0, 1) | i <- [1..d]])~);
-    \\Computes the first order derivative of all the L-functions
-    if(dim!=d, Y=Mat([lfun(L[1][i], 0, 1) | i <- [1..2]])~);
-    \\Note that if d=1, and dim=2, then L[1] is a vector of two L-functions
-    if(dim==4, Y=[conj(Y[2,1]);Y[1,1];Y[2,1];conj(Y[1,1])]);
-    \\Compatible with order of matrix A
-    K=nfinit(pol);\\Coefficient field of the modular forms
+    K=nfinit(pol);\\Coefficient field
     A1=Mat([nfeltembed(K, x)~ | x <- K.zk]);
     \\Creates the matrix with integral basis for every embedding
     if(d==1, A=A1, A=matconcat([A1; conj(A1)]));
     \\Adds conjugate embeddings to the matrix if d is not equal to 1
+    if(dim==d, Y=Mat([lfun(L[i], 0, 1) | i <- [1..d]])~);
+    \\Computes the first order derivative of all the L-functions
+    if(dim!=d, Y=Mat([lfun(L[1][i], 0, 1) | i <- [1..2]])~);
+    \\Note that if d=1, and dim=2, then L[1] is a vector of two L-functions
+    if(dim==4, Y=[conj(Y[2,1]); Y[1,1]; Y[2,1]; conj(Y[1,1])]);
+    \\Compatible with sequence of matrix A
     g=polredabs(algdep(exp(matsolve(A, Y)[1, 1]), deg));
-    \\Gives polynomial with reduced coefficients with exp(YA^(-1)[1,1]) as root
+    \\Gives polynomial with reduced coefficients with exp(YA^(-1)[1, 1]) as root
     print(g);\\Prints the polynomial found in the previous line
     F=nfinit(nfsplitting(g));\\Computes the splitting field of g
     G=galoisinit(F);\\Computes the galois group of F
-    [T,n]=galoischartable(G);\\Computes the Charactertable of G
+    [T, n]=galoischartable(G);\\Computes the Charactertable of G
     C=galoisconjclasses(G);\\Computes the conjugacy classes of G
     print([[#c, permorder(c[1])] | c <- C]);
     \\Prints order of every conjugacy class and order their elements
     for(i=1, #T,
-        if(permorder(C[i][1])==2 && polsturm(galoisfixedfield(G,C[i])[1])!=0,
-            cc=i)
+        if(permorder(C[i][1])==2 && polsturm(galoisfixedfield(G, C[i])[1])!=0, cc=i)
     );\\Computes which row corresponds with the complex conjugation
     for(i=1, #T,
         if(T[, i][1] == 2 && lfunconductor(lfunartin(F, G, T[, i], n))==N
-            && galoischardet(G,T[, i])[cc]==-1,
-                print([T[, i], i]))
+            && galoischardet(G,T[, i])[cc]==-1, print([T[, i], i]))
     );\\Prints the row(s) of the 2-dim odd representation(s) with conductor N
 };
 code(23, 1, 22, 0, x, 3);
@@ -54,34 +52,50 @@ code(124, 4, 67, 87, x^4-x^2+1, 24);
 code(148, 2, 105, 117, x^2+1, 24);
 code(229, 2, 107, 122, x^2+1, 24);
 
-default(parisize, 64M);
-default(parisizemax, 800000M);
-default(realprecision, 2000); \\Precision
-N=633; Chi1 = Mod(71, 633); M1= mfinit([N, 1, Chi1], 0); \\Space of modular forms of type (1,Chi1) with level 633
-B1 = mfeigenbasis(M1); f1= B1[2]; L1 = lfunmf(M1, f1); 
-Chi2 = Mod(107, 633); M2= mfinit([N, 1, Chi2], 0); \\Space of modular forms of type (1,Chi2) with level 633
-B2 = mfeigenbasis(M2); f2= B2[2]; L2 = lfunmf(M2, f2); 
-Chi3 = Mod(188, 633); M3= mfinit([N, 1, Chi3], 0); \\Space of modular forms of type (1,Chi3) with level 633
-B3 = mfeigenbasis(M3); f3= B3[2]; L3 = lfunmf(M3, f3); 
-Chi4 = Mod(266, 633); M4= mfinit([N, 1, Chi4], 0); \\Space of modular forms of type (1,Chi4) with level 633
-B4 = mfeigenbasis(M4); f4= B4[2]; L4 = lfunmf(M4, f4);
-L11=lfun(L1[1],0,1); L12=lfun(L1[2],0,1);
-L21=conj(L12); L22=conj(L11); L31=lfun(L3[1],0,1);
-L32=lfun(L3[2],0,1); L41=conj(L31); L42=conj(L32);
-K=nfinit(y^8-y^6+y^4-y^2+1); \\Coefficient field of the modular forms
-A1= Mat([nfeltembed(K, w)~ | w <- K.zk]); A=matconcat([A1;conj(A1)]); \\Matrix of embeddings on integral basis of K
-C=[L11, L21, L42, L31, L22, L12, L32, L41]~; \\Same order as embedding order of A
-W=matsolve(A,C); g=algdep(exp(W[1]),120); g
 
 
-default(parisize, 64M);
-default(parisizemax, 800000M);
-default(realprecision, 2000);
-N=1948; Chi = Mod(973, 1948); M = mfinit([N, 1, Chi], 0);
-B = mfeigenbasis(M); f= B[1]; L = lfunmf(M, f); \\Space of modular forms of type (1,Chi) with level 1948
-L1=lfun(L[1],0,1); L2=conj(L1);
-L3=lfun(L[3],0,1); L4=conj(L3);
-K=nfinit(y^4+3*y^2+1); \\Coefficient field of the modular forms
-A1= Mat([nfeltembed(K, w)~ | w <- K.zk]); A=matconcat([A1;conj(A1)]); \\Matrix of embeddings on integral basis of K
-C=[L2,L4,L1,L3]~; W=matsolve(A,C); \\Same order as embedding order of A
-g=algdep(exp(W[1]), 240); g
+default(parisize, 64M);\\Beginning stack size
+default(parisizemax, 800000M);\\Highest stack size used
+default(realprecision, 1500);\\Highest precision used
+N=633;\\Level of the newform
+X=[Mod(71, 633), Mod(107, 633), Mod(188, 633), Mod(266, 633)];
+\\Vector of the Dirichlet characters
+L1=lfunmf(M1=mfinit([N, 1, X[1]], 0), mfeigenbasis(M1)[2]);
+L2=lfunmf(M2=mfinit([N, 1, X[2]], 0), mfeigenbasis(M2)[2]);
+L3=lfunmf(M3=mfinit([N, 1, X[3]], 0), mfeigenbasis(M3)[2]);
+L4=lfunmf(M1=mfinit([N, 1, X[4]], 0), mfeigenbasis(M4)[2]);
+\\L-functions for spaces of type (1,Chi1),...,(1,Chi4) with level 633
+L11=lfun(L1[1],0,1);\\Derivative of L-function at 0
+L12=lfun(L1[2],0,1);
+L21=conj(L12); 
+L22=conj(L11);
+L31=lfun(L3[1],0,1);
+L32=lfun(L3[2],0,1); 
+L41=conj(L31); 
+L42=conj(L32);
+K=nfinit(y^8-y^6+y^4-y^2+1);\\Coefficient field
+A1= Mat([nfeltembed(K, w)~ | w <- K.zk]);\\Matrix of embeddings on integral basis of K
+A=matconcat([A1;conj(A1)]);\\Adds complex conjugate of embeddings
+Y=[L11, L21, L42, L31, L22, L12, L32, L41]~;\\Compatible with sequence of A
+print(g=algdep(exp(matsolve(A,Y)[1]),120));
+\\Prints polynomial with coefficients with exp(YA^(-1)[1]) as root
+
+
+
+default(parisize, 64M);\\Beginning stack size
+default(parisizemax, 800000M);\\Highest stack size used
+default(realprecision, 1);\\Highest precision used
+N=1948;\\Level of the newform
+Chi=Mod(973, 1948);\\Dirichlet character
+L=lfunmf(M1=mfinit([N, 1, Chi], 0), mfeigenbasis(M1)[1]);
+\\L-functions for spaces of type (1, Chi) with level 633
+L1=lfun(L[1],0,1);\\Derivative of L-function at 0
+L2=conj(L1);
+L3=lfun(L[3],0,1); 
+L4=conj(L3);
+K=nfinit(y^4+3*y^2+1);\\Coefficient field
+A1= Mat([nfeltembed(K, w)~ | w <- K.zk]);\\Matrix of embeddings on integral basis of K
+A=matconcat([A1;conj(A1)]);\\Adds complex conjugate embeddings
+Y=[L2,L4,L1,L3]~;\\Compatible with sequence of A
+print(g=algdep(exp(matsolve(A,Y)[1]),120));
+\\Prints polynomial with coefficients with exp(YA^(-1)[1]) as root
