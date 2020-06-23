@@ -22,7 +22,7 @@ code(N, dim, Chi1, Chi2, pol, deg)=
     if(dim==4, Y=[conj(Y[2,1]); Y[1,1]; Y[2,1]; conj(Y[1,1])]);
     \\ Compatible with sequence of matrix A
     g=polredabs(algdep(exp(matsolve(A, Y)[1, 1]), deg));
-    \\ Gives polynomial with reduced coefficients with exp(YA^(-1)[1, 1]) as root
+    \\ Gives polynomial with reduced coefficients with exp(A^(-1)Y[1, 1]) as root
     print(g); \\ Prints the polynomial found in the previous line
     F=nfinit([nfsplitting(g), [N]]); \\ Computes the splitting field of g
     G=galoisinit(F); \\ Computes the galois group of F
@@ -79,7 +79,7 @@ A1= Mat([nfeltembed(K, w)~ | w <- K.zk]); \\ Matrix of embeddings on integral ba
 A=matconcat([A1;conj(A1)]); \\ Adds complex conjugate of embeddings
 Y=[L11, L21, L42, L31, L22, L12, L32, L41]~; \\ Compatible with sequence of A
 print(g=algdep(exp(matsolve(A,Y)[1]),120));
-\\ Prints polynomial with coefficients with exp(YA^(-1)[1]) as root
+\\ Prints polynomial with coefficients with exp(A^(-1)Y[1]) as root
 
 
 
@@ -99,4 +99,4 @@ A1= Mat([nfeltembed(K, w)~ | w <- K.zk]); \\ Matrix of embeddings on integral ba
 A=matconcat([A1;conj(A1)]); \\ Adds complex conjugate embeddings
 Y=[L2,L4,L1,L3]~; \\ Compatible with sequence of A
 print(g=algdep(exp(matsolve(A,Y)[1]),120));
-\\ Prints polynomial with coefficients with exp(YA^(-1)[1]) as root
+\\ Prints polynomial with coefficients with exp(A^(-1)Y[1]) as root
